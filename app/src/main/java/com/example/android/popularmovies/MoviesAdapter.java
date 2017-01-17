@@ -16,13 +16,14 @@ import java.util.List;
  * Created by Edi on 15.01.2017.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
-    private Context mContext;
-    private List<Movie> moviesList;
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
 
-    public MovieAdapter(Context mContext, List<Movie> albumList) {
+    private Context mContext;
+    private List<Movie> albumList;
+
+    public MoviesAdapter(Context mContext, List<Movie> albumList) {
         this.mContext = mContext;
-        this.moviesList = albumList;
+        this.albumList = albumList;
     }
 
     @Override
@@ -34,17 +35,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Movie movie = moviesList.get(position);
-        holder.title.setText(movie.getName());
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        Movie album = albumList.get(position);
+        holder.title.setText(album.getName());
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(movie.getThumbnail()).into(holder.thumbnail);
+        Glide.with(mContext).load("http://image.tmdb.org/t/p/w185/WLQN5aiQG8wc9SeKwixW7pAR8K.jpg").into(holder.thumbnail);
     }
 
     @Override
     public int getItemCount() {
-        return moviesList.size();
+        return albumList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

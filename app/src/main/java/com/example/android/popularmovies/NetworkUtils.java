@@ -19,6 +19,8 @@ public class NetworkUtils {
 
     final static String TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
+    public String testURL = "https://api.themoviedb.org/3/movie/popular?api_key=23de07bffacf8bae0d55a99863d916bb&language=en-US&page=1";
+
     public static URL buildUrl(String tmdbQuery) {
         Uri builtUri = Uri.parse(TMDB_BASE_URL);
 //                .appendQueryParameter(PARAM_QUERY, githubSearchQuery)

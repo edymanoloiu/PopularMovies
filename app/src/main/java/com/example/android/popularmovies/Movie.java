@@ -9,45 +9,48 @@ public class Movie {
     private String plot;
     private String userRating;
     private String releaseDate;
-    private int thumbnail;
+    private String posterURL;
 
-    public void setName(String name) {
-        this.name = name;
+    public Movie() {
     }
 
     public String getName() {
         return name;
     }
 
-    public void setPlot(String plot) {
-        this.plot = plot;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPlot() {
         return plot;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setUserRating(String userRating) {
-        this.userRating = userRating;
+    public void setPlot(String plot) {
+        this.plot = plot;
     }
 
     public String getUserRating() {
         return userRating;
     }
 
-    public int getThumbnail() {
-        return thumbnail;
+    public void setUserRating(String userRating) {
+        this.userRating = userRating;
     }
 
-    public void setThumbnail(int thumbnail) {
-        this.thumbnail = thumbnail;
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public String getPosterURL() {
+        return posterURL;
+    }
+
+    public void setPosterURL(String posterURL) {
+        this.posterURL = posterURL;
     }
 }
