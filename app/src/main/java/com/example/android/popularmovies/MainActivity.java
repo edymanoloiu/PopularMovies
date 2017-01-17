@@ -70,19 +70,19 @@ public class MainActivity extends AppCompatActivity {
     private void prepareAlbums() {
 
         Movie a = new Movie();
-        a.setName("Xscpae");
+        a.setName("Xscpae1");
         albumList.add(a);
 
         a = new Movie();
-        a.setName("Xscpae");
+        a.setName("Xscpae2");
         albumList.add(a);
 
         a = new Movie();
-        a.setName("Xscpae");
+        a.setName("Xscpae3");
         albumList.add(a);
 
         a = new Movie();
-        a.setName("Xscpae");
+        a.setName("Xscpae4");
         albumList.add(a);
 
         adapter.notifyDataSetChanged();
