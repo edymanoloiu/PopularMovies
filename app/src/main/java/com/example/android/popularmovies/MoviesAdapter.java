@@ -36,7 +36,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Movie album = moviesList.get(position);
         holder.title.setText(album.getName());
 
@@ -46,8 +46,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(v.getContext(), holder.title.getText(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, MovieDetails.class);
+                intent.putExtra("title", moviesList.get(position).getName());
+                intent.putExtra("posterPath", moviesList.get(position).getPosterURL());
+                intent.putExtra("plot", moviesList.get(position).getPlot());
+                intent.putExtra("releaseDate", moviesList.get(position).getReleaseDate());
+                intent.putExtra("userRating", moviesList.get(position).getUserRating());
                 mContext.startActivity(intent);
             }
         });

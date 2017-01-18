@@ -76,10 +76,10 @@ public class NetworkUtils {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonobject = jsonArray.getJSONObject(i);
             movie = new Movie();
-            movie.setName(jsonobject.getString("title"));
+            movie.setName(jsonobject.getString("original_title"));
             movie.setPlot(jsonobject.getString("overview"));
             movie.setPosterURL(IMAGE_BASE_URL + jsonobject.getString("poster_path").substring(1));
-            movie.setUserRating(jsonobject.getString("popularity"));
+            movie.setUserRating(jsonobject.getString("vote_average"));
             movie.setReleaseDate(jsonobject.getString("release_date"));
             movies.add(movie);
         }
