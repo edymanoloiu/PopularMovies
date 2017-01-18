@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
     private List<Movie> moviesList;
+    private boolean isSortedByPopularity = true;
+    private int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,29 +37,33 @@ public class MainActivity extends AppCompatActivity {
         moviesList = new ArrayList<>();
         adapter = new MoviesAdapter(this, moviesList);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        final RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
         //get popular movies from TMDB
-        try {
-            String query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
-            List<Movie> list = NetworkUtils.getMoviesList(NetworkUtils.buildUrl(query));
-            for (Movie m : list) {
-                moviesList.add(m);
+        String query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+        loadMovies(query);
+
+        //add recycler view scroll listener
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (isLastItemDisplaying(recyclerView)) {
+                    page++;
+                    String query = null;
+
+                    if (!isSortedByPopularity)
+                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    else
+                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+
+                    loadMovies(query);
+                }
             }
-            adapter.notifyDataSetChanged();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     @Override
@@ -75,12 +81,19 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.highest_rated_option:
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
+                isSortedByPopularity = false;
                 break;
             case R.id.most_popular_option:
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
+                isSortedByPopularity = true;
                 break;
         }
 
+        loadMovies(query);
+        return true;
+    }
+
+    private void loadMovies(String query) {
         try {
             List<Movie> list = NetworkUtils.getMoviesList(NetworkUtils.buildUrl(query));
             for (Movie m : list) {
@@ -96,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     /**
@@ -105,6 +117,15 @@ public class MainActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    private boolean isLastItemDisplaying(RecyclerView recyclerView) {
+        if (recyclerView.getAdapter().getItemCount() != 0) {
+            int lastVisibleItemPosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
+                return true;
+        }
+        return false;
     }
 
     /**
