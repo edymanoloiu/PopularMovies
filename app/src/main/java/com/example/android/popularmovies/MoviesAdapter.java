@@ -37,8 +37,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Movie album = moviesList.get(position);
-        holder.title.setText(album.getName());
+        Movie movie = moviesList.get(position);
+        holder.title.setText(movie.getName());
+        holder.rating.setText(movie.getUserRating());
 
         // loading album cover using Glide library
         Glide.with(mContext).load(moviesList.get(position).getPosterURL()).into(holder.thumbnail);
@@ -63,13 +64,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
+        public TextView title, rating;
         public ImageView thumbnail;
 
         public MyViewHolder(final View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            rating = (TextView) view.findViewById(R.id.rating);
         }
     }
 }
