@@ -11,16 +11,19 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
-    private List<Movie> albumList;
+    private List<Movie> moviesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        albumList = new ArrayList<>();
-        adapter = new MoviesAdapter(this, albumList);
+        moviesList = new ArrayList<>();
+        adapter = new MoviesAdapter(this, moviesList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -38,7 +41,23 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        prepareAlbums();
+        //get popular movies from TMDB
+        try {
+            String query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
+            List<Movie> list = NetworkUtils.getMoviesList(NetworkUtils.buildUrl(query));
+            for (Movie m : list) {
+                moviesList.add(m);
+            }
+            adapter.notifyDataSetChanged();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -50,42 +69,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        moviesList.clear();
+        String query = null;
+
         switch (item.getItemId()) {
             case R.id.highest_rated_option:
-                // User chose the "Settings" item, show the app settings UI...
-                Toast.makeText(getBaseContext(), "Highest rated", Toast.LENGTH_SHORT).show();
-                return true;
-
+                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
+                break;
             case R.id.most_popular_option:
-                // User chose the "Favorite" action, mark the current item
-                Toast.makeText(getBaseContext(), "most popular", Toast.LENGTH_SHORT).show();
-                return true;
+                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
+                break;
+        }
+
+        try {
+            List<Movie> list = NetworkUtils.getMoviesList(NetworkUtils.buildUrl(query));
+            for (Movie m : list) {
+                moviesList.add(m);
+            }
+            adapter.notifyDataSetChanged();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
         return true;
-    }
-
-    /**
-     * Adding few albums for testing
-     */
-    private void prepareAlbums() {
-
-        Movie a = new Movie();
-        a.setName("Xscpae1");
-        albumList.add(a);
-
-        a = new Movie();
-        a.setName("Xscpae2");
-        albumList.add(a);
-
-        a = new Movie();
-        a.setName("Xscpae3");
-        albumList.add(a);
-
-        a = new Movie();
-        a.setName("Xscpae4");
-        albumList.add(a);
-
-        adapter.notifyDataSetChanged();
     }
 
     /**

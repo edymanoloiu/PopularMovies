@@ -20,11 +20,11 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<Movie> albumList;
+    private List<Movie> moviesList;
 
-    public MoviesAdapter(Context mContext, List<Movie> albumList) {
+    public MoviesAdapter(Context mContext, List<Movie> moviesList) {
         this.mContext = mContext;
-        this.albumList = albumList;
+        this.moviesList = moviesList;
     }
 
     @Override
@@ -37,11 +37,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Movie album = albumList.get(position);
+        Movie album = moviesList.get(position);
         holder.title.setText(album.getName());
 
         // loading album cover using Glide library
-        Glide.with(mContext).load("http://image.tmdb.org/t/p/w185/WLQN5aiQG8wc9SeKwixW7pAR8K.jpg").into(holder.thumbnail);
+        Glide.with(mContext).load(moviesList.get(position).getPosterURL()).into(holder.thumbnail);
 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +53,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return albumList.size();
+        return moviesList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
