@@ -80,10 +80,12 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.highest_rated_option:
+                page = 1;
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
                 isSortedByPopularity = false;
                 break;
             case R.id.most_popular_option:
+                page = 1;
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
                 isSortedByPopularity = true;
                 break;
