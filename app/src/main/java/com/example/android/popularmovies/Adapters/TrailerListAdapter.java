@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.android.popularmovies.R;
 
 /**
  * Created by Edi on 21.01.2017.
@@ -44,7 +46,7 @@ public class TrailerListAdapter extends BaseAdapter {
         if (view == null)
             view = inflater.inflate(R.layout.trailer_list_row_item, null);
         TextView textView = (TextView) view.findViewById(R.id.trailer_list_item_text);
-        textView.setText("Trailer #" + (i + 1));
+        textView.setText(data[i]);
         return view;
     }
 }

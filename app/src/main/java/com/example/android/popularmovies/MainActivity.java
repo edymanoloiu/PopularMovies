@@ -12,6 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.android.popularmovies.Adapters.MoviesAdapter;
+import com.example.android.popularmovies.Utilities.Movie;
+import com.example.android.popularmovies.Utilities.MovieSortEnums;
+import com.example.android.popularmovies.Utilities.NetworkUtils;
+
 import org.json.JSONException;
 
 import java.io.IOException;

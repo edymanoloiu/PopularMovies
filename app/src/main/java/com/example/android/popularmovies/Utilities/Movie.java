@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.example.android.popularmovies.Utilities;
 
 /**
  * Created by Edi on 16.01.2017.
@@ -10,6 +10,7 @@ public class Movie {
     private String userRating;
     private String releaseDate;
     private String posterURL;
+    private String ID;
 
     public Movie() {
     }
@@ -52,5 +53,13 @@ public class Movie {
 
     public void setPosterURL(String posterURL) {
         this.posterURL = posterURL;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 }
