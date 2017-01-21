@@ -1,9 +1,14 @@
 package com.example.android.popularmovies;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -72,6 +77,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
         for (Trailer t : trailerList)
             trailerNames.add(t.getName());
         listView.setAdapter(new TrailerListAdapter(this, trailerNames.toArray(new String[trailerList.size()])));
+
+        //create on click listener for list view
+        final List<Trailer> finalTrailerList = trailerList;
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + finalTrailerList.get(i).getKey()));
+                Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://www.youtube.com/watch?v=" + finalTrailerList.get(i).getKey()));
+                try {
+                    startActivity(appIntent);
+                } catch (ActivityNotFoundException ex) {
+                    startActivity(webIntent);
+                }
+            }
+        });
     }
 
     @Override

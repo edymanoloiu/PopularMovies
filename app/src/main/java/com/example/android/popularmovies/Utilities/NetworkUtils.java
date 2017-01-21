@@ -105,6 +105,7 @@ public class NetworkUtils {
             trailer.setType(jsonobject.getString("type"));
             trailer.setSize(jsonobject.getInt("size"));
             trailer.setName(jsonobject.getString("name"));
+            trailer.setKey(jsonobject.getString("key"));
             trailers.add(trailer);
         }
         return trailers;

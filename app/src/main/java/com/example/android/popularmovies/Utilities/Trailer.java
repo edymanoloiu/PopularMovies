@@ -10,6 +10,7 @@ public class Trailer {
     private String name;
     private int size;
     private String type;
+    private String key;
 
     public String getID() {
         return ID;
@@ -41,5 +42,13 @@ public class Trailer {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
     }
 }
