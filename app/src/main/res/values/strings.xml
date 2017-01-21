@@ -4,4 +4,6 @@
     <string name="most_popular_string">Most popular</string>
     <string name="now_playing_string">Now playing</string>
     <string name="upcoming_string">Upcoming</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="trailer_list_item_string">Trailer</string>
 </resources>
