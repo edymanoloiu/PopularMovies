@@ -111,6 +111,24 @@ public class NetworkUtils {
         return trailers;
     }
 
+    public static List<Review> getReviewsList(URL url) throws ExecutionException, InterruptedException, JSONException {
+        String jsonResponse = new TMDBQueryTask().execute(url).get();
+        JSONObject object = new JSONObject(jsonResponse);
+        JSONArray jsonArray = object.getJSONArray("results");
+        List<Review> reviews = new LinkedList<>();
+        Review review = null;
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonobject = jsonArray.getJSONObject(i);
+            review = new Review();
+            review.setId(jsonobject.getString("id"));
+            review.setAuthor(jsonobject.getString("author"));
+            review.setContent(jsonobject.getString("content"));
+            review.setUrl(jsonobject.getString("url"));
+            reviews.add(review);
+        }
+        return reviews;
+    }
+
     private static class TMDBQueryTask extends AsyncTask<URL, Void, String> {
         @Override
         protected String doInBackground(URL... urls) {
