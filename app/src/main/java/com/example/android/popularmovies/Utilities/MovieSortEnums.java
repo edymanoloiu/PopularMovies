@@ -9,6 +9,7 @@ public class MovieSortEnums {
         User_Rating,
         Most_Popular,
         Now_playing,
-        Upcoming
+        Upcoming,
+        Favorites
     }
 }

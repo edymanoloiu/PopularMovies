@@ -17,4 +17,8 @@
         android:id="@+id/upcoming_option"
         android:title="@string/upcoming_string"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/favorite_option"
+        android:title="@string/favorites_sort"
+        app:showAsAction="never" />
 </menu>
