@@ -2,11 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/now_playing_option"
+        android:title="@string/now_playing_string"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/most_popular_option"
         android:title="@string/most_popular_string"
         app:showAsAction="never" />
     <item
         android:id="@+id/highest_rated_option"
         android:title="@string/highest_sorted_string"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/upcoming_option"
+        android:title="@string/upcoming_string"
         app:showAsAction="never" />
 </menu>

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
     private List<Movie> moviesList;
-    private boolean isSortedByPopularity = true;
+    private MovieSortEnums.MovieSortType sortType = MovieSortEnums.MovieSortType.Now_playing;
     private int page = 1;
 
     @Override
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         //get popular movies from TMDB
-        String query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+        String query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
         loadMovies(query);
 
         //add recycler view scroll listener
@@ -55,10 +55,14 @@ public class MainActivity extends AppCompatActivity {
                     page++;
                     String query = null;
 
-                    if (!isSortedByPopularity)
+                    if (sortType == MovieSortEnums.MovieSortType.User_Rating)
                         query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                    else
+                    else if (sortType == MovieSortEnums.MovieSortType.Most_Popular)
                         query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    else if (sortType == MovieSortEnums.MovieSortType.Now_playing)
+                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    else if (sortType == MovieSortEnums.MovieSortType.Upcoming)
+                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
 
                     loadMovies(query);
                 }
@@ -81,13 +85,23 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.highest_rated_option:
                 page = 1;
-                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
-                isSortedByPopularity = false;
+                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                sortType = MovieSortEnums.MovieSortType.User_Rating;
                 break;
             case R.id.most_popular_option:
                 page = 1;
-                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
-                isSortedByPopularity = true;
+                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                sortType = MovieSortEnums.MovieSortType.Most_Popular;
+                break;
+            case R.id.now_playing_option:
+                page = 1;
+                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                sortType = MovieSortEnums.MovieSortType.Now_playing;
+                break;
+            case R.id.upcoming_option:
+                page = 1;
+                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                sortType = MovieSortEnums.MovieSortType.Upcoming;
                 break;
         }
 

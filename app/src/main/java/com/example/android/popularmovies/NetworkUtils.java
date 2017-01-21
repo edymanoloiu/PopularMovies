@@ -31,6 +31,10 @@ public class NetworkUtils {
 
     final static String RATED_SORT = "top_rated?";
 
+    final static String NOW_PLAYING_SORT = "now_playing?";
+
+    final static String UPCOMING_SORT = "upcoming?";
+
     final static String QUERY_END = "&language=en-US&page=";
 
     final static String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185/";

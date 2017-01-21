@@ -2,4 +2,6 @@
     <string name="app_name">Popular Movies</string>
     <string name="highest_sorted_string">Highest rated</string>
     <string name="most_popular_string">Most popular</string>
+    <string name="now_playing_string">Now playing</string>
+    <string name="upcoming_string">Upcoming</string>
 </resources>
