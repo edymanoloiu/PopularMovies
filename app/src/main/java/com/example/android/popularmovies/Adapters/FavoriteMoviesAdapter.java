@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.android.popularmovies.Data.FavoriteMoviesContract;
+import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.MovieDetailsActivity;
 import com.example.android.popularmovies.R;
 
@@ -39,14 +39,14 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         if (!mCursor.moveToPosition(position))
-            return; // bail if returned null
+            return;
 
-        final String movieTitle = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE));
-        final String movieRating = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_USER_RATING));
-        final String posterPath = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTER_PATH));
-        final String plot = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_PLOT));
-        final String releaseDate = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE_DATE));
-        final String movieID = mCursor.getString(mCursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID));
+        final String movieTitle = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE));
+        final String movieRating = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_USER_RATING));
+        final String posterPath = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH));
+        final String plot = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_PLOT));
+        final String releaseDate = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+        final String movieID = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
 
         holder.title.setText(movieTitle);
         holder.rating.setText(movieRating);

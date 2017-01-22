@@ -16,8 +16,8 @@ import android.view.View;
 
 import com.example.android.popularmovies.Adapters.FavoriteMoviesAdapter;
 import com.example.android.popularmovies.Adapters.MoviesAdapter;
-import com.example.android.popularmovies.Data.FavoriteMoviesContract;
 import com.example.android.popularmovies.Data.FavoriteMoviesDBHelper;
+import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.Utilities.Movie;
 import com.example.android.popularmovies.Utilities.MovieSortEnums;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
@@ -37,15 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> moviesList;
     private MovieSortEnums.MovieSortType sortType = MovieSortEnums.MovieSortType.Now_playing;
     private int page = 1;
-    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        FavoriteMoviesDBHelper dbHelper = new FavoriteMoviesDBHelper(this);
-        mDb = dbHelper.getReadableDatabase();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -149,15 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Cursor getAllFavoriteMovies() {
-        return mDb.query(
-                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP
-        );
+        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, MovieContract.MovieEntry.COLUMN_TIMESTAMP);
     }
 
     /**

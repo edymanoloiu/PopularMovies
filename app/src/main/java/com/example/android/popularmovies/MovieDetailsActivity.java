@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,8 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.android.popularmovies.Adapters.TrailerListAdapter;
-import com.example.android.popularmovies.Data.FavoriteMoviesContract;
-import com.example.android.popularmovies.Data.FavoriteMoviesDBHelper;
+import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.Utilities.Movie;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
 import com.example.android.popularmovies.Utilities.Review;
@@ -40,16 +38,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView userRatingDateTextView;
     ImageView moviePosterTextView;
     ListView listView;
-    private SQLiteDatabase mDb;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-
-        FavoriteMoviesDBHelper dbHelper = new FavoriteMoviesDBHelper(this);
-        mDb = dbHelper.getWritableDatabase();
 
         movieTitleTextView = (TextView) findViewById(R.id.movie_details_title);
         releaseDateTextView = (TextView) findViewById(R.id.movie_details_release_date);
@@ -158,7 +151,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         int cursorPosition = -1;
         for (int i = 0; i < cursor.getCount(); i++) {
             cursor.moveToPosition(i);
-            if (cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
+            if (cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
                 isFavorite = true;
                 cursorPosition = i;
                 break;
@@ -179,7 +172,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Added " + title + " to favorites list", Toast.LENGTH_SHORT).show();
         } else {
             cursor.moveToPosition(cursorPosition);
-            removeMovie(cursor.getLong(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry._ID)));
+            removeMovie(cursor.getLong(cursor.getColumnIndex(MovieContract.MovieEntry._ID)));
             Toast.makeText(getBaseContext(), "Removed " + title + " to favorites list", Toast.LENGTH_SHORT).show();
         }
 
@@ -187,30 +180,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
-    private long addNewMovie(Movie movie) {
+    private void addNewMovie(Movie movie) {
         ContentValues cv = new ContentValues();
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, movie.getName());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getID());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTER_PATH, movie.getPosterURL());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_USER_RATING, movie.getUserRating());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
-        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_PLOT, movie.getPlot());
-        return mDb.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
+        cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movie.getName());
+        cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getID());
+        cv.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPosterURL());
+        cv.put(MovieContract.MovieEntry.COLUMN_USER_RATING, movie.getUserRating());
+        cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        cv.put(MovieContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
+
+        getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
     }
 
     private Cursor getAllFavoriteMovies() {
-        return mDb.query(
-                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP + " DESC"
-        );
+        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, MovieContract.MovieEntry.COLUMN_TIMESTAMP);
     }
 
-    private boolean removeMovie(long id) {
-        return mDb.delete(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, FavoriteMoviesContract.FavoriteMoviesEntry._ID + "=" + id, null) > 0;
+    private void removeMovie(long id) {
+        Uri uri = MovieContract.MovieEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(id + "").build();
+        getContentResolver().delete(uri, null, null);
     }
 }

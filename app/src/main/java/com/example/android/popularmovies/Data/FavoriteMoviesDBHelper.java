@@ -19,22 +19,22 @@ public class FavoriteMoviesDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String SQL_CREATE_FAVORITE_MOVIES_TABLE = "CREATE TABLE " +
-                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME + "(" +
-                FavoriteMoviesContract.FavoriteMoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL, " +
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL," +
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_USER_RATING + " TEXT NOT NULL," +
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL," +
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_PLOT + " TEXT NOT NULL," +
-                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                MovieContract.MovieEntry.TABLE_NAME + "(" +
+                MovieContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                MovieContract.MovieEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL," +
+                MovieContract.MovieEntry.COLUMN_USER_RATING + " TEXT NOT NULL," +
+                MovieContract.MovieEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL," +
+                MovieContract.MovieEntry.COLUMN_PLOT + " TEXT NOT NULL," +
+                MovieContract.MovieEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ");";
         sqLiteDatabase.execSQL(SQL_CREATE_FAVORITE_MOVIES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.MovieEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }
