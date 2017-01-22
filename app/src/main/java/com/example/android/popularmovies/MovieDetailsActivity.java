@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.android.popularmovies.Adapters.TrailerListAdapter;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
+import com.example.android.popularmovies.Utilities.Review;
 import com.example.android.popularmovies.Utilities.Trailer;
 
 import org.json.JSONException;
@@ -45,12 +47,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         moviePosterTextView = (ImageView) findViewById(R.id.movie_details_poster);
 
         //get intent information
-        String title = getIntent().getStringExtra("title");
+        final String title = getIntent().getStringExtra("title");
         String posterURL = getIntent().getStringExtra("posterPath");
         String plot = getIntent().getStringExtra("plot");
         String releaseDate = "Release date: " + getIntent().getStringExtra("releaseDate");
         String userRatings = "User rating: " + getIntent().getStringExtra("userRating");
-        String movieID = getIntent().getStringExtra("ID");
+        final String movieID = getIntent().getStringExtra("ID");
 
         setTitle(title);
         movieTitleTextView.setText(plot);
@@ -91,6 +93,34 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 } catch (ActivityNotFoundException ex) {
                     startActivity(webIntent);
                 }
+            }
+        });
+
+        //create on click listener for the review button
+        Button reviewButton = (Button) findViewById(R.id.show_reviews_button);
+        reviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //check if there are any reviews to show
+                String query = NetworkUtils.TMDB_BASE_URL + movieID + "/reviews?" + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
+                List<Review> reviews = null;
+                try {
+                    reviews = NetworkUtils.getReviewsList(NetworkUtils.buildUrl(query));
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (!reviews.isEmpty()) {
+                    Intent intent = new Intent(view.getContext(), ReviewsActivity.class);
+                    intent.putExtra("ID", movieID);
+                    intent.putExtra("title", title);
+                    view.getContext().startActivity(intent);
+                } else
+                    Toast.makeText(getBaseContext(), "There are no reviews for this movies", Toast.LENGTH_LONG).show();
             }
         });
     }
