@@ -81,31 +81,6 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
         }
     }
 
-
-    //    @Override
-//    public void onBindViewHolder(final MoviesAdapter.MyViewHolder holder, final int position) {
-//        Movie movie = moviesList.get(position);
-//        holder.title.setText(movie.getName());
-//        holder.rating.setText(movie.getUserRating());
-//
-//        // loading album cover using Glide library
-//        Glide.with(mContext).load(moviesList.get(position).getPosterURL()).into(holder.thumbnail);
-//
-//        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(mContext, MovieDetailsActivity.class);
-//                intent.putExtra("title", moviesList.get(position).getName());
-//                intent.putExtra("posterPath", moviesList.get(position).getPosterURL());
-//                intent.putExtra("plot", moviesList.get(position).getPlot());
-//                intent.putExtra("releaseDate", moviesList.get(position).getReleaseDate());
-//                intent.putExtra("userRating", moviesList.get(position).getUserRating());
-//                intent.putExtra("ID", moviesList.get(position).getID());
-//                mContext.startActivity(intent);
-//            }
-//        });
-//    }
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, rating;
         public ImageView thumbnail;

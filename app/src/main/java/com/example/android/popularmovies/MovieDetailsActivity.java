@@ -3,6 +3,7 @@ package com.example.android.popularmovies;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -144,6 +145,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
         String posterURL = getIntent().getStringExtra("posterPath");
         String movieID = getIntent().getStringExtra("ID");
         String userRatings = getIntent().getStringExtra("userRating");
@@ -151,18 +153,35 @@ public class MovieDetailsActivity extends AppCompatActivity {
         String releaseDate = getIntent().getStringExtra("releaseDate");
         String plot = getIntent().getStringExtra("plot");
 
-        Movie movie = new Movie();
-        movie.setName(title);
-        movie.setID(movieID);
-        movie.setPosterURL(posterURL);
-        movie.setUserRating(userRatings);
-        movie.setReleaseDate(releaseDate);
-        movie.setPlot(plot);
+        Cursor cursor = getAllFavoriteMovies();
+        boolean isFavorite = false;
+        int cursorPosition = -1;
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.moveToPosition(i);
+            if (cursor.getString(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
+                isFavorite = true;
+                cursorPosition = i;
+                break;
+            }
+        }
+        if (!isFavorite) {
+            Movie movie = new Movie();
+            movie.setName(title);
+            movie.setID(movieID);
+            movie.setPosterURL(posterURL);
+            movie.setUserRating(userRatings);
+            movie.setReleaseDate(releaseDate);
+            movie.setPlot(plot);
 
-        //add movie to the DB
-        addNewMovie(movie);
+            //add movie to the DB
+            addNewMovie(movie);
 
-        Toast.makeText(getBaseContext(), "Added " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "Added " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+        } else {
+            cursor.moveToPosition(cursorPosition);
+            removeMovie(cursor.getLong(cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry._ID)));
+            Toast.makeText(getBaseContext(), "Removed " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+        }
 
         return true;
     }
@@ -177,5 +196,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_PLOT, movie.getPlot());
         return mDb.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
+    }
+
+    private Cursor getAllFavoriteMovies() {
+        return mDb.query(
+                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP + " DESC"
+        );
+    }
+
+    private boolean removeMovie(long id) {
+        return mDb.delete(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, FavoriteMoviesContract.FavoriteMoviesEntry._ID + "=" + id, null) > 0;
     }
 }
