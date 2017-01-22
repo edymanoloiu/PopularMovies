@@ -2,7 +2,6 @@ package com.example.android.popularmovies;
 
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import android.view.View;
 
 import com.example.android.popularmovies.Adapters.FavoriteMoviesAdapter;
 import com.example.android.popularmovies.Adapters.MoviesAdapter;
-import com.example.android.popularmovies.Data.FavoriteMoviesDBHelper;
 import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.Utilities.Movie;
 import com.example.android.popularmovies.Utilities.MovieSortEnums;
@@ -81,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (sortType == MovieSortEnums.MovieSortType.Favorites)
+            favoriteMoviesAdapter.swapCursor(getAllFavoriteMovies());
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.sort_options, menu);
@@ -97,21 +102,25 @@ public class MainActivity extends AppCompatActivity {
                 page = 1;
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.User_Rating;
+                recyclerView.setAdapter(adapter);
                 break;
             case R.id.most_popular_option:
                 page = 1;
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.Most_Popular;
+                recyclerView.setAdapter(adapter);
                 break;
             case R.id.now_playing_option:
                 page = 1;
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.Now_playing;
+                recyclerView.setAdapter(adapter);
                 break;
             case R.id.upcoming_option:
                 page = 1;
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.Upcoming;
+                recyclerView.setAdapter(adapter);
                 break;
             case R.id.favorite_option:
                 sortType = MovieSortEnums.MovieSortType.Favorites;
@@ -131,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             for (Movie m : list) {
                 moviesList.add(m);
             }
-            recyclerView.setAdapter(adapter);
+            //recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } catch (IOException e) {
             e.printStackTrace();
@@ -145,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Cursor getAllFavoriteMovies() {
-        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, MovieContract.MovieEntry.COLUMN_TIMESTAMP);
+        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, MovieContract.MovieEntry.COLUMN_TIMESTAMP + " DESC");
     }
 
     /**

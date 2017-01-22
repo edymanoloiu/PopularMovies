@@ -188,12 +188,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         cv.put(MovieContract.MovieEntry.COLUMN_USER_RATING, movie.getUserRating());
         cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         cv.put(MovieContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
-
         getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
     }
 
     private Cursor getAllFavoriteMovies() {
-        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, MovieContract.MovieEntry.COLUMN_TIMESTAMP);
+        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, MovieContract.MovieEntry.COLUMN_TIMESTAMP + " DESC");
     }
 
     private void removeMovie(long id) {
