@@ -1,6 +1,8 @@
 package com.example.android.popularmovies;
 
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.android.popularmovies.Adapters.FavoriteMoviesAdapter;
 import com.example.android.popularmovies.Adapters.MoviesAdapter;
+import com.example.android.popularmovies.Data.FavoriteMoviesContract;
+import com.example.android.popularmovies.Data.FavoriteMoviesDBHelper;
 import com.example.android.popularmovies.Utilities.Movie;
 import com.example.android.popularmovies.Utilities.MovieSortEnums;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
@@ -28,14 +33,19 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
+    private FavoriteMoviesAdapter favoriteMoviesAdapter;
     private List<Movie> moviesList;
     private MovieSortEnums.MovieSortType sortType = MovieSortEnums.MovieSortType.Now_playing;
     private int page = 1;
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FavoriteMoviesDBHelper dbHelper = new FavoriteMoviesDBHelper(this);
+        mDb = dbHelper.getReadableDatabase();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -56,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (isLastItemDisplaying(recyclerView)) {
+                if (isLastItemDisplaying(recyclerView) && sortType != MovieSortEnums.MovieSortType.Favorites) {
                     page++;
                     String query = null;
 
@@ -68,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                         query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                     else if (sortType == MovieSortEnums.MovieSortType.Upcoming)
                         query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-
                     loadMovies(query);
                 }
             }
@@ -108,9 +117,15 @@ public class MainActivity extends AppCompatActivity {
                 query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.Upcoming;
                 break;
+            case R.id.favorite_option:
+                sortType = MovieSortEnums.MovieSortType.Favorites;
+                favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteMovies());
+                recyclerView.setAdapter(favoriteMoviesAdapter);
+                return true;
         }
 
-        loadMovies(query);
+        if (item.getItemId() != R.id.favorite_option)
+            loadMovies(query);
         return true;
     }
 
@@ -120,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             for (Movie m : list) {
                 moviesList.add(m);
             }
+            recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,6 +146,18 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    private Cursor getAllFavoriteMovies() {
+        return mDb.query(
+                FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_TIMESTAMP
+        );
     }
 
     /**

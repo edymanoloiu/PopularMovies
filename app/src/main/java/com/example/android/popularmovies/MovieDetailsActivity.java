@@ -1,7 +1,9 @@
 package com.example.android.popularmovies;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.android.popularmovies.Adapters.TrailerListAdapter;
+import com.example.android.popularmovies.Data.FavoriteMoviesContract;
+import com.example.android.popularmovies.Data.FavoriteMoviesDBHelper;
+import com.example.android.popularmovies.Utilities.Movie;
 import com.example.android.popularmovies.Utilities.NetworkUtils;
 import com.example.android.popularmovies.Utilities.Review;
 import com.example.android.popularmovies.Utilities.Trailer;
@@ -34,12 +39,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView userRatingDateTextView;
     ImageView moviePosterTextView;
     ListView listView;
+    private SQLiteDatabase mDb;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        FavoriteMoviesDBHelper dbHelper = new FavoriteMoviesDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
 
         movieTitleTextView = (TextView) findViewById(R.id.movie_details_title);
         releaseDateTextView = (TextView) findViewById(R.id.movie_details_release_date);
@@ -134,7 +143,39 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(getBaseContext(), "Favorite presses", Toast.LENGTH_SHORT).show();
+
+        String posterURL = getIntent().getStringExtra("posterPath");
+        String movieID = getIntent().getStringExtra("ID");
+        String userRatings = getIntent().getStringExtra("userRating");
+        String title = getIntent().getStringExtra("title");
+        String releaseDate = getIntent().getStringExtra("releaseDate");
+        String plot = getIntent().getStringExtra("plot");
+
+        Movie movie = new Movie();
+        movie.setName(title);
+        movie.setID(movieID);
+        movie.setPosterURL(posterURL);
+        movie.setUserRating(userRatings);
+        movie.setReleaseDate(releaseDate);
+        movie.setPlot(plot);
+
+        //add movie to the DB
+        addNewMovie(movie);
+
+        Toast.makeText(getBaseContext(), "Added " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+
         return true;
+    }
+
+
+    private long addNewMovie(Movie movie) {
+        ContentValues cv = new ContentValues();
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, movie.getName());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, movie.getID());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_POSTER_PATH, movie.getPosterURL());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_USER_RATING, movie.getUserRating());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_PLOT, movie.getPlot());
+        return mDb.insert(FavoriteMoviesContract.FavoriteMoviesEntry.TABLE_NAME, null, cv);
     }
 }
