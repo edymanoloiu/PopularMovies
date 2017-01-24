@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.Utilities;
+package com.softed.android.popularmovies.Utilities;
 
 import android.net.Uri;
 import android.os.AsyncTask;

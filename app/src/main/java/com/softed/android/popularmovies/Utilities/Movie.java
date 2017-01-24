@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.Utilities;
+package com.softed.android.popularmovies.Utilities;
 
 /**
  * Created by Edi on 16.01.2017.

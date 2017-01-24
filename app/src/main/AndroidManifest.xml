@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.popularmovies">
+    package="com.softed.android.popularmovies">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.example.android.popularmovies.TERMS_READ" />
+    <uses-permission android:name="com.softed.android.popularmovies.TERMS_READ" />
 
     <application
         android:allowBackup="true"
@@ -11,19 +11,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.softed.android.popularmovies.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MovieDetailsActivity" />
-        <activity android:name=".ReviewsActivity"></activity>
+        <activity android:name="com.softed.android.popularmovies.MovieDetailsActivity" />
+        <activity android:name="com.softed.android.popularmovies.ReviewsActivity"></activity>
 
         <provider
-            android:name=".Data.MovieContentProvider"
-            android:authorities="com.example.android.popularmovies"
+            android:name="com.softed.android.popularmovies.Data.MovieContentProvider"
+            android:authorities="com.softed.android.popularmovies"
             android:exported="false" />
     </application>
 

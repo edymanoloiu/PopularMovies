@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.Adapters;
+package com.softed.android.popularmovies.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.android.popularmovies.Data.MovieContract;
-import com.example.android.popularmovies.MovieDetailsActivity;
-import com.example.android.popularmovies.R;
+import com.softed.android.popularmovies.Data.MovieContract;
+import com.softed.android.popularmovies.MovieDetailsActivity;
+import com.softed.android.popularmovies.R;
 
 /**
  * Created by Edi on 22.01.2017.

@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.softed.android.popularmovies;
 
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
@@ -18,12 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.android.popularmovies.Adapters.TrailerListAdapter;
-import com.example.android.popularmovies.Data.MovieContract;
-import com.example.android.popularmovies.Utilities.Movie;
-import com.example.android.popularmovies.Utilities.NetworkUtils;
-import com.example.android.popularmovies.Utilities.Review;
-import com.example.android.popularmovies.Utilities.Trailer;
+import com.softed.android.popularmovies.Adapters.TrailerListAdapter;
+import com.softed.android.popularmovies.Data.MovieContract;
+import com.softed.android.popularmovies.Utilities.Movie;
+import com.softed.android.popularmovies.Utilities.NetworkUtils;
+import com.softed.android.popularmovies.Utilities.Review;
+import com.softed.android.popularmovies.Utilities.Trailer;
 
 import org.json.JSONException;
 
@@ -147,14 +147,17 @@ public class MovieDetailsActivity extends AppCompatActivity {
         String plot = getIntent().getStringExtra("plot");
 
         Cursor cursor = getAllFavoriteMovies();
+
         boolean isFavorite = false;
         int cursorPosition = -1;
-        for (int i = 0; i < cursor.getCount(); i++) {
-            cursor.moveToPosition(i);
-            if (cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
-                isFavorite = true;
-                cursorPosition = i;
-                break;
+        if (cursor != null) {
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                if (cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
+                    isFavorite = true;
+                    cursorPosition = i;
+                    break;
+                }
             }
         }
         if (!isFavorite) {

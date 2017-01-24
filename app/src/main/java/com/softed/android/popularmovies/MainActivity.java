@@ -1,4 +1,4 @@
-package com.example.android.popularmovies;
+package com.softed.android.popularmovies;
 
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -13,12 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.android.popularmovies.Adapters.FavoriteMoviesAdapter;
-import com.example.android.popularmovies.Adapters.MoviesAdapter;
-import com.example.android.popularmovies.Data.MovieContract;
-import com.example.android.popularmovies.Utilities.Movie;
-import com.example.android.popularmovies.Utilities.MovieSortEnums;
-import com.example.android.popularmovies.Utilities.NetworkUtils;
+import com.softed.android.popularmovies.Adapters.FavoriteMoviesAdapter;
+import com.softed.android.popularmovies.Adapters.MoviesAdapter;
+import com.softed.android.popularmovies.Data.MovieContract;
+import com.softed.android.popularmovies.Utilities.Movie;
+import com.softed.android.popularmovies.Utilities.MovieSortEnums;
+import com.softed.android.popularmovies.Utilities.NetworkUtils;
 
 import org.json.JSONException;
 

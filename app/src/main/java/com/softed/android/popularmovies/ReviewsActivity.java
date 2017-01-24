@@ -1,12 +1,12 @@
-package com.example.android.popularmovies;
+package com.softed.android.popularmovies;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
-import com.example.android.popularmovies.Adapters.ReviewsListAdapter;
-import com.example.android.popularmovies.Utilities.NetworkUtils;
-import com.example.android.popularmovies.Utilities.Review;
+import com.softed.android.popularmovies.Adapters.ReviewsListAdapter;
+import com.softed.android.popularmovies.Utilities.NetworkUtils;
+import com.softed.android.popularmovies.Utilities.Review;
 
 import org.json.JSONException;
 

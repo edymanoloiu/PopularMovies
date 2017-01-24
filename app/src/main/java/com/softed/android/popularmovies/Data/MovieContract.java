@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.Data;
+package com.softed.android.popularmovies.Data;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 
 public class MovieContract {
 
-    public static final String AUTHORITY = "com.example.android.popularmovies";
+    public static final String AUTHORITY = "com.softed.android.popularmovies";
 
     // The base content URI = "content://" + <authority>
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);

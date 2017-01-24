@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.Adapters;
+package com.softed.android.popularmovies.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.R;
-import com.example.android.popularmovies.Utilities.Review;
+import com.softed.android.popularmovies.R;
+import com.softed.android.popularmovies.Utilities.Review;
 
 import java.util.List;
 
