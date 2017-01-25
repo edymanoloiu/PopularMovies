@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
+        //set title
+        setTitle(MovieSortEnums.sortTitles.get(sortType));
+
         //get popular movies from TMDB
         String query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
         loadMovies(query);
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (sortType == MovieSortEnums.MovieSortType.Favorites)
             favoriteMoviesAdapter.swapCursor(getAllFavoriteMovies());
+        setTitle(MovieSortEnums.sortTitles.get(sortType));
     }
 
     @Override
@@ -124,10 +128,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.favorite_option:
                 sortType = MovieSortEnums.MovieSortType.Favorites;
+                setTitle(MovieSortEnums.sortTitles.get(sortType));
                 favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteMovies());
                 recyclerView.setAdapter(favoriteMoviesAdapter);
                 return true;
         }
+
+        setTitle(MovieSortEnums.sortTitles.get(sortType));
 
         if (item.getItemId() != R.id.favorite_option)
             loadMovies(query);

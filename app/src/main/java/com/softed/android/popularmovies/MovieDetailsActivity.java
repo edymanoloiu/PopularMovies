@@ -33,11 +33,13 @@ import java.util.concurrent.ExecutionException;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
+    static String MOVIEID;
     TextView movieTitleTextView;
     TextView releaseDateTextView;
     TextView userRatingDateTextView;
     ImageView moviePosterTextView;
     ListView listView;
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         String releaseDate = "Release date: " + getIntent().getStringExtra("releaseDate");
         String userRatings = "User rating: " + getIntent().getStringExtra("userRating");
         final String movieID = getIntent().getStringExtra("ID");
+        MOVIEID = movieID;
 
         setTitle(title);
         movieTitleTextView.setText(plot);
@@ -130,15 +133,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.details_view_menu, menu);
+
+        this.menu = menu;
+        MenuItem settingsItem = menu.findItem(R.id.action_favorite);
+
+        if (checkIfMoviesIsFavorite(MOVIEID) < 0)
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.favorite_image));
+        else
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.full_favorite_icon));
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
         String posterURL = getIntent().getStringExtra("posterPath");
         String movieID = getIntent().getStringExtra("ID");
         String userRatings = getIntent().getStringExtra("userRating");
@@ -147,20 +156,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         String plot = getIntent().getStringExtra("plot");
 
         Cursor cursor = getAllFavoriteMovies();
+        int cursorPosition = checkIfMoviesIsFavorite(movieID);
 
-        boolean isFavorite = false;
-        int cursorPosition = -1;
-        if (cursor != null) {
-            for (int i = 0; i < cursor.getCount(); i++) {
-                cursor.moveToPosition(i);
-                if (cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
-                    isFavorite = true;
-                    cursorPosition = i;
-                    break;
-                }
-            }
-        }
-        if (!isFavorite) {
+        if (cursorPosition < 0) {
             Movie movie = new Movie();
             movie.setName(title);
             movie.setID(movieID);
@@ -173,10 +171,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
             addNewMovie(movie);
 
             Toast.makeText(getBaseContext(), "Added " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+            MenuItem settingsItem = menu.findItem(R.id.action_favorite);
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.full_favorite_icon));
         } else {
             cursor.moveToPosition(cursorPosition);
             removeMovie(cursor.getLong(cursor.getColumnIndex(MovieContract.MovieEntry._ID)));
             Toast.makeText(getBaseContext(), "Removed " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+            MenuItem settingsItem = menu.findItem(R.id.action_favorite);
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.favorite_image));
         }
 
         return true;
@@ -202,5 +204,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Uri uri = MovieContract.MovieEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(id + "").build();
         getContentResolver().delete(uri, null, null);
+    }
+
+    private int checkIfMoviesIsFavorite(String movieID) {
+        Cursor cursor = getAllFavoriteMovies();
+        boolean isFavorite = false;
+        int cursorPosition = -1;
+        if (cursor != null) {
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                if (cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
+                    isFavorite = true;
+                    cursorPosition = i;
+                    break;
+                }
+            }
+        }
+        if (isFavorite)
+            return cursorPosition;
+        else
+            return -1;
     }
 }
