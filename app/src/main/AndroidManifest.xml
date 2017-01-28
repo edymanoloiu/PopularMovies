@@ -26,7 +26,8 @@
             android:authorities="com.softed.android.popularmovies"
             android:exported="false" />
 
-        <activity android:name=".TvDetailsActivity"></activity>
+        <activity android:name=".TvDetailsActivity" />
+        <activity android:name=".SeasonDetailsActivity"></activity>
     </application>
 
 </manifest>

@@ -1,9 +1,12 @@
 package com.softed.android.popularmovies;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,11 +30,14 @@ public class TvDetailsActivity extends AppCompatActivity {
     TextView tvOverviewTextView;
     ImageView moviePosterTextView;
     ListView seasonsListView;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_details);
+
+        mContext = getApplicationContext();
 
         tvTitleTextView = (TextView) findViewById(R.id.tv_details_title);
         tvReleaseDateTextView = (TextView) findViewById(R.id.tv_release_date);
@@ -89,6 +95,18 @@ public class TvDetailsActivity extends AppCompatActivity {
                 }
                 v.onTouchEvent(event);
                 return true;
+            }
+        });
+
+        //set on item click listener
+        final List<Season> finalSeasons = seasons;
+        seasonsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(mContext, SeasonDetailsActivity.class);
+                intent.putExtra("ID", tvID);
+                intent.putExtra("season", finalSeasons.get(i).getNumber());
+                startActivity(intent);
             }
         });
     }
