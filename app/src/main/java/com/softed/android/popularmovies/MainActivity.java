@@ -12,6 +12,8 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.softed.android.popularmovies.Adapters.FavoriteMoviesAdapter;
 import com.softed.android.popularmovies.Adapters.MoviesAdapter;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> moviesList;
     private MovieSortEnums.MovieSortType sortType = MovieSortEnums.MovieSortType.Now_playing;
     private int page = 1;
+    private boolean isMovie = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +56,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         //set title
-        setTitle(MovieSortEnums.sortTitles.get(sortType));
+        if (isMovie)
+            setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+        else
+            setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
 
         //get popular movies from TMDB
-        String query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+        String query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
         loadMovies(query);
 
         //add recycler view scroll listener
@@ -67,14 +73,25 @@ public class MainActivity extends AppCompatActivity {
                     page++;
                     String query = null;
 
-                    if (sortType == MovieSortEnums.MovieSortType.User_Rating)
-                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                    else if (sortType == MovieSortEnums.MovieSortType.Most_Popular)
-                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                    else if (sortType == MovieSortEnums.MovieSortType.Now_playing)
-                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                    else if (sortType == MovieSortEnums.MovieSortType.Upcoming)
-                        query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    if (isMovie) {
+                        if (sortType == MovieSortEnums.MovieSortType.User_Rating)
+                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        else if (sortType == MovieSortEnums.MovieSortType.Most_Popular)
+                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        else if (sortType == MovieSortEnums.MovieSortType.Now_playing)
+                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        else if (sortType == MovieSortEnums.MovieSortType.Upcoming)
+                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    } else {
+                        if (sortType == MovieSortEnums.MovieSortType.User_Rating)
+                            query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        else if (sortType == MovieSortEnums.MovieSortType.Most_Popular)
+                            query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        else if (sortType == MovieSortEnums.MovieSortType.Now_playing)
+                            query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.AIRING_TODAY + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        else if (sortType == MovieSortEnums.MovieSortType.Upcoming)
+                            query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.ON_THE_AIR + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    }
                     loadMovies(query);
                 }
             }
@@ -86,13 +103,53 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (sortType == MovieSortEnums.MovieSortType.Favorites)
             favoriteMoviesAdapter.swapCursor(getAllFavoriteMovies());
-        setTitle(MovieSortEnums.sortTitles.get(sortType));
+        setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.sort_options, menu);
+
+        MenuItem item = menu.findItem(R.id.movies_switch);
+        final Switch switchButton = (Switch) item.getActionView().findViewById(R.id.what_to_display_switch);
+
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isOn) {
+                if (isOn) {
+                    switchButton.setText("TV Series");
+                    moviesList.clear();
+                    String query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.AIRING_TODAY + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    List<Movie> list = null;
+                    try {
+                        list = NetworkUtils.getTVList(NetworkUtils.buildUrl(query));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    for (Movie m : list) {
+                        moviesList.add(m);
+                    }
+                    adapter.notifyDataSetChanged();
+                    isMovie = false;
+                    sortType = MovieSortEnums.MovieSortType.Now_playing;
+                    setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
+                } else {
+                    switchButton.setText("Movies");
+                    isMovie = true;
+                    String query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                    moviesList.clear();
+                    loadMovies(query);
+                    sortType = MovieSortEnums.MovieSortType.Now_playing;
+                    setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                }
+            }
+        });
+
         return true;
     }
 
@@ -104,37 +161,52 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.highest_rated_option:
                 page = 1;
-                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                if (isMovie)
+                    query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                else
+                    query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.User_Rating;
                 recyclerView.setAdapter(adapter);
                 break;
             case R.id.most_popular_option:
                 page = 1;
-                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                if (isMovie)
+                    query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                else
+                    query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.Most_Popular;
                 recyclerView.setAdapter(adapter);
                 break;
             case R.id.now_playing_option:
                 page = 1;
-                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                if (isMovie)
+                    query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                else
+                    query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.AIRING_TODAY + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.Now_playing;
                 recyclerView.setAdapter(adapter);
                 break;
             case R.id.upcoming_option:
                 page = 1;
-                query = NetworkUtils.TMDB_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                if (isMovie)
+                    query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                else
+                    query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.ON_THE_AIR + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                 sortType = MovieSortEnums.MovieSortType.Upcoming;
                 recyclerView.setAdapter(adapter);
                 break;
             case R.id.favorite_option:
                 sortType = MovieSortEnums.MovieSortType.Favorites;
-                setTitle(MovieSortEnums.sortTitles.get(sortType));
+                setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
                 favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteMovies());
                 recyclerView.setAdapter(favoriteMoviesAdapter);
                 return true;
         }
 
-        setTitle(MovieSortEnums.sortTitles.get(sortType));
+        if (isMovie)
+            setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+        else
+            setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
 
         if (item.getItemId() != R.id.favorite_option)
             loadMovies(query);
@@ -143,11 +215,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadMovies(String query) {
         try {
-            List<Movie> list = NetworkUtils.getMoviesList(NetworkUtils.buildUrl(query));
+            List<Movie> list;
+            if (isMovie)
+                list = NetworkUtils.getMoviesList(NetworkUtils.buildUrl(query));
+            else
+                list = NetworkUtils.getTVList(NetworkUtils.buildUrl(query));
+
             for (Movie m : list) {
                 moviesList.add(m);
             }
-            //recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } catch (IOException e) {
             e.printStackTrace();

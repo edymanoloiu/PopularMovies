@@ -8,11 +8,19 @@ import java.util.TreeMap;
 
 public class MovieSortEnums {
 
-    public static TreeMap<MovieSortType, String> sortTitles = new TreeMap<MovieSortType, String>() {{
+    public static TreeMap<MovieSortType, String> sortTitlesMovies = new TreeMap<MovieSortType, String>() {{
         put(MovieSortType.User_Rating, "Highest rated");
         put(MovieSortType.Most_Popular, "Most popular");
         put(MovieSortType.Now_playing, "Now playing");
         put(MovieSortType.Upcoming, "Upcoming");
+        put(MovieSortType.Favorites, "Favorites");
+    }};
+
+    public static TreeMap<MovieSortType, String> sortTitlesTv = new TreeMap<MovieSortType, String>() {{
+        put(MovieSortType.User_Rating, "Highest rated");
+        put(MovieSortType.Most_Popular, "Most popular");
+        put(MovieSortType.Now_playing, "Airing today");
+        put(MovieSortType.Upcoming, "On the air");
         put(MovieSortType.Favorites, "Favorites");
     }};
 

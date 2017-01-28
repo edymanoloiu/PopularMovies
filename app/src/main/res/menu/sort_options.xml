@@ -21,4 +21,9 @@
         android:id="@+id/favorite_option"
         android:title="@string/favorites_sort"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/movies_switch"
+        android:title=""
+        app:actionLayout="@layout/switch_layout"
+        app:showAsAction="always"></item>
 </menu>

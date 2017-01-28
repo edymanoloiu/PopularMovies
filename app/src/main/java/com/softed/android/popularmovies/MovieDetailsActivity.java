@@ -67,7 +67,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Glide.with(getBaseContext()).load(posterURL).into(moviePosterTextView);
 
         //get trailer list fro current movie
-        String query = NetworkUtils.TMDB_BASE_URL + movieID + "/videos?" + NetworkUtils.API_KEY + "&language=en-US";
+        String query = NetworkUtils.TMDB_MOVIE_BASE_URL + movieID + "/videos?" + NetworkUtils.API_KEY + "&language=en-US";
         List<Trailer> trailerList = null;
         try {
             trailerList = NetworkUtils.getTrailersList(NetworkUtils.buildUrl(query));
@@ -108,7 +108,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //check if there are any reviews to show
-                String query = NetworkUtils.TMDB_BASE_URL + movieID + "/reviews?" + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
+                String query = NetworkUtils.TMDB_MOVIE_BASE_URL + movieID + "/reviews?" + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + "1";
                 List<Review> reviews = null;
                 try {
                     reviews = NetworkUtils.getReviewsList(NetworkUtils.buildUrl(query));

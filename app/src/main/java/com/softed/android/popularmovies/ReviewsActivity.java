@@ -27,7 +27,7 @@ public class ReviewsActivity extends AppCompatActivity {
         setTitle(movieTitle);
 
         String movieID = getIntent().getStringExtra("ID");
-        String query = NetworkUtils.TMDB_BASE_URL + movieID + "/reviews?" + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+        String query = NetworkUtils.TMDB_MOVIE_BASE_URL + movieID + "/reviews?" + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
 
         //get reviews
         List<Review> reviews = null;

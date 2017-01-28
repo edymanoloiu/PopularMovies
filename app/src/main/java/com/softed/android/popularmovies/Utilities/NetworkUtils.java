@@ -25,7 +25,9 @@ public class NetworkUtils {
 
     public final static String API_KEY = "api_key=23de07bffacf8bae0d55a99863d916bb";
 
-    public final static String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/";
+    public final static String TMDB_MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/";
+
+    public final static String TMDB_TV_BASE_URL = "https://api.themoviedb.org/3/tv/";
 
     public final static String POPULAR_SORT = "popular?";
 
@@ -38,6 +40,10 @@ public class NetworkUtils {
     public final static String QUERY_END = "&language=en-US&page=";
 
     public final static String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185/";
+
+    public final static String AIRING_TODAY = "airing_today?";
+
+    public final static String ON_THE_AIR = "on_the_air?";
 
     public static URL buildUrl(String tmdbQuery) {
         Uri builtUri = Uri.parse(tmdbQuery);
@@ -85,6 +91,28 @@ public class NetworkUtils {
             movie.setPosterURL(IMAGE_BASE_URL + jsonobject.getString("poster_path").substring(1));
             movie.setUserRating(jsonobject.getString("vote_average"));
             movie.setReleaseDate(jsonobject.getString("release_date"));
+            movie.setID(jsonobject.getString("id"));
+            movies.add(movie);
+        }
+
+        return movies;
+    }
+
+    public static List<Movie> getTVList(URL url) throws ExecutionException, InterruptedException, JSONException {
+        String jsonResponse = new TMDBQueryTask().execute(url).get();
+        JSONObject object = new JSONObject(jsonResponse);
+        JSONArray jsonArray = object.getJSONArray("results");
+
+        List<Movie> movies = new LinkedList<>();
+        Movie movie = null;
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonobject = jsonArray.getJSONObject(i);
+            movie = new Movie();
+            movie.setName(jsonobject.getString("original_name"));
+            movie.setPlot(jsonobject.getString("overview"));
+            movie.setPosterURL(IMAGE_BASE_URL + jsonobject.getString("poster_path").substring(1));
+            movie.setUserRating(jsonobject.getString("vote_average"));
+            movie.setReleaseDate(jsonobject.getString("first_air_date"));
             movie.setID(jsonobject.getString("id"));
             movies.add(movie);
         }
