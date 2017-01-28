@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 if (query.length() != 0) {
                     String dbQuery;
                     if (isMovie)
-                        dbQuery = NetworkUtils.TMDB_MOVIE_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + query + "&page=1&include_adult=false";
+                        dbQuery = NetworkUtils.TMDB_MOVIE_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + query.replace(" ", "%20") + "&page=1&include_adult=false";
                     else
-                        dbQuery = NetworkUtils.TMDB_TV_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + query + "&page=1";
+                        dbQuery = NetworkUtils.TMDB_TV_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + query.replace(" ", "%20") + "&page=1";
                     moviesList.clear();
                     loadMovies(dbQuery);
                     page = 1;
@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isOn) {
+                searchView.setQuery("", false);
                 if (isOn) {
                     switchButton.setText("TV Series");
                     if (sortType != MovieSortEnums.MovieSortType.Favorites) {
@@ -229,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         moviesList.clear();
         String query = null;
+        searchView.setQuery("", false);
 
         switch (item.getItemId()) {
             case R.id.highest_rated_option:

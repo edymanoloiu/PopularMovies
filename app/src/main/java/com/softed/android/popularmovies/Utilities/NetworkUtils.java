@@ -83,26 +83,30 @@ public class NetworkUtils {
     }
 
     public static List<Movie> getMoviesList(URL url) throws IOException, JSONException, ExecutionException, InterruptedException {
-        String jsonResponse = new TMDBQueryTask().execute(url).get();
-        JSONObject object = new JSONObject(jsonResponse);
-        JSONArray jsonArray = object.getJSONArray("results");
+        try {
+            String jsonResponse = new TMDBQueryTask().execute(url).get();
+            JSONObject object = new JSONObject(jsonResponse);
+            JSONArray jsonArray = object.getJSONArray("results");
 
-        List<Movie> movies = new LinkedList<>();
-        Movie movie;
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonobject = jsonArray.getJSONObject(i);
-            movie = new Movie();
-            movie.setName(jsonobject.getString("original_title"));
-            movie.setPlot(jsonobject.getString("overview"));
-            movie.setPosterURL(IMAGE_BASE_URL + jsonobject.getString("poster_path").substring(1));
-            movie.setUserRating(jsonobject.getString("vote_average"));
-            movie.setReleaseDate(jsonobject.getString("release_date"));
-            movie.setID(jsonobject.getString("id"));
-            movie.setIsMovie(true);
-            movies.add(movie);
+            List<Movie> movies = new LinkedList<>();
+            Movie movie;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonobject = jsonArray.getJSONObject(i);
+                movie = new Movie();
+                movie.setName(jsonobject.getString("original_title"));
+                movie.setPlot(jsonobject.getString("overview"));
+                movie.setPosterURL(IMAGE_BASE_URL + jsonobject.getString("poster_path").substring(1));
+                movie.setUserRating(jsonobject.getString("vote_average"));
+                movie.setReleaseDate(jsonobject.getString("release_date"));
+                movie.setID(jsonobject.getString("id"));
+                movie.setIsMovie(true);
+                movies.add(movie);
+            }
+
+            return movies;
+        } catch (Exception e) {
+            return new LinkedList<Movie>();
         }
-
-        return movies;
     }
 
     public static List<Movie> getTVList(URL url) throws ExecutionException, InterruptedException, JSONException {
