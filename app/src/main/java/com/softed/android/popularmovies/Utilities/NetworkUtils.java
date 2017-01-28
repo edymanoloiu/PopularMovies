@@ -189,6 +189,38 @@ public class NetworkUtils {
         return seasons;
     }
 
+    public static Season getSeason(URL url) throws ExecutionException, InterruptedException, JSONException {
+        Season season = new Season();
+
+        String jsonResponse = new TMDBQueryTask().execute(url).get();
+        JSONObject object = new JSONObject(jsonResponse);
+        JSONArray jsonArray = object.getJSONArray("episodes");
+
+        season.setID(object.getString("id"));
+        season.setPosterPath(IMAGE_BASE_URL + object.getString("poster_path").substring(1));
+        season.setName(object.getString("name"));
+        season.setOverview(object.getString("overview"));
+        season.setAirDate(object.getString("air_date"));
+
+        List<Episode> episodes = new LinkedList<>();
+        Episode episode;
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            episode = new Episode();
+            episode.setID(jsonObject.getString("id"));
+            episode.setOverview(jsonObject.getString("overview"));
+            episode.setName(jsonObject.getString("name"));
+            episode.setPosterPath(IMAGE_BASE_URL + jsonObject.getString("still_path").substring(1));
+            episode.setAir_date(jsonObject.getString("air_date"));
+            episode.setRating(jsonObject.getString("vote_average"));
+            episodes.add(episode);
+        }
+
+        season.setEpisodeList(episodes);
+
+        return season;
+    }
+
     private static class TMDBQueryTask extends AsyncTask<URL, Void, String> {
         @Override
         protected String doInBackground(URL... urls) {

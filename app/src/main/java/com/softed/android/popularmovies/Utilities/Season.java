@@ -14,6 +14,7 @@ public class Season {
     private String name;
     private String overview;
     private List<Episode> episodeList;
+    private String posterPath;
 
     public String getID() {
         return ID;
@@ -69,5 +70,13 @@ public class Season {
 
     public void setEpisodeList(List<Episode> episodeList) {
         this.episodeList = episodeList;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 }

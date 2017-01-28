@@ -27,7 +27,8 @@
             android:exported="false" />
 
         <activity android:name=".TvDetailsActivity" />
-        <activity android:name=".SeasonDetailsActivity"></activity>
+        <activity android:name=".SeasonDetailsActivity" />
+        <activity android:name=".EpisodeDetailsActivity"></activity>
     </application>
 
 </manifest>

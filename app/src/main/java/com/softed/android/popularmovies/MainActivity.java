@@ -101,9 +101,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (sortType == MovieSortEnums.MovieSortType.Favorites)
-            favoriteMoviesAdapter.swapCursor(getAllFavoriteMovies());
-        setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+        if (isMovie) {
+            if (sortType == MovieSortEnums.MovieSortType.Favorites)
+                favoriteMoviesAdapter.swapCursor(getAllFavoriteMovies());
+            setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+        } else {
+            if (sortType == MovieSortEnums.MovieSortType.Favorites)
+                favoriteMoviesAdapter.swapCursor(getAllFavoriteMovies());
+            setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
+        }
     }
 
     @Override
