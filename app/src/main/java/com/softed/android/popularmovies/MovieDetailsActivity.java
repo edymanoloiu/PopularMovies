@@ -68,7 +68,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         userRatingDateTextView.setText(userRatings);
         Glide.with(getBaseContext()).load(posterURL).into(moviePosterTextView);
 
-        //get trailer list fro current movie
+        //get trailer list for current movie
         String query = NetworkUtils.TMDB_MOVIE_BASE_URL + movieID + "/videos?" + NetworkUtils.API_KEY + "&language=en-US";
         List<Trailer> trailerList = null;
         try {
@@ -214,6 +214,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         cv.put(MovieContract.MovieEntry.COLUMN_USER_RATING, movie.getUserRating());
         cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         cv.put(MovieContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
+        cv.put(MovieContract.MovieEntry.COLUMN_IS_MOVIE, "1");
         getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
     }
 

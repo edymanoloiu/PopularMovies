@@ -13,7 +13,7 @@ public class MovieSortEnums {
         put(MovieSortType.Most_Popular, "Most popular");
         put(MovieSortType.Now_playing, "Now playing");
         put(MovieSortType.Upcoming, "Upcoming");
-        put(MovieSortType.Favorites, "Favorites");
+        put(MovieSortType.Favorites, "Favorites movies");
     }};
 
     public static TreeMap<MovieSortType, String> sortTitlesTv = new TreeMap<MovieSortType, String>() {{
@@ -21,7 +21,7 @@ public class MovieSortEnums {
         put(MovieSortType.Most_Popular, "Most popular");
         put(MovieSortType.Now_playing, "Airing today");
         put(MovieSortType.Upcoming, "On the air");
-        put(MovieSortType.Favorites, "Favorites");
+        put(MovieSortType.Favorites, "Favorites TV series");
     }};
 
     public enum MovieSortType {

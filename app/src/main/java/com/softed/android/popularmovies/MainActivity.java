@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
         } else {
             if (sortType == MovieSortEnums.MovieSortType.Favorites)
-                favoriteMoviesAdapter.swapCursor(getAllFavoriteMovies());
+                favoriteMoviesAdapter.swapCursor(getAllFavoriteTVs());
             setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
         }
     }
@@ -126,43 +126,57 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isOn) {
                 if (isOn) {
                     switchButton.setText("TV Series");
-                    moviesList.clear();
-                    String query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.AIRING_TODAY + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                    List<Movie> list = null;
-                    try {
-                        list = NetworkUtils.getTVList(NetworkUtils.buildUrl(query));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if (sortType != MovieSortEnums.MovieSortType.Favorites) {
+                        moviesList.clear();
+                        String query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.AIRING_TODAY + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        List<Movie> list = null;
+                        try {
+                            list = NetworkUtils.getTVList(NetworkUtils.buildUrl(query));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        for (Movie m : list) {
+                            moviesList.add(m);
+                        }
+                        adapter.notifyDataSetChanged();
+                        isMovie = false;
+                        sortType = MovieSortEnums.MovieSortType.Now_playing;
+                        setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
+                        recyclerView.setAdapter(adapter);
+                    } else {
+                        isMovie = false;
+                        setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
+                        favoriteMoviesAdapter = new FavoriteMoviesAdapter(getBaseContext(), getAllFavoriteTVs());
+                        recyclerView.setAdapter(favoriteMoviesAdapter);
                     }
-                    for (Movie m : list) {
-                        moviesList.add(m);
-                    }
-                    adapter.notifyDataSetChanged();
-                    isMovie = false;
-                    sortType = MovieSortEnums.MovieSortType.Now_playing;
-                    setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
-
                     //changing the sort options
                     MenuItem item = currentMenu.findItem(R.id.now_playing_option);
-                    item.setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
+                    item.setTitle(MovieSortEnums.sortTitlesTv.get(MovieSortEnums.MovieSortType.Now_playing));
                     item = currentMenu.findItem(R.id.upcoming_option);
                     item.setTitle(MovieSortEnums.sortTitlesTv.get(MovieSortEnums.MovieSortType.Upcoming));
                 } else {
-                    switchButton.setText("Movies");
-                    isMovie = true;
-                    String query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                    moviesList.clear();
-                    loadMovies(query);
-                    sortType = MovieSortEnums.MovieSortType.Now_playing;
-                    setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                    if (sortType != MovieSortEnums.MovieSortType.Favorites) {
+                        switchButton.setText("Movies");
+                        isMovie = true;
+                        String query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        moviesList.clear();
+                        loadMovies(query);
+                        sortType = MovieSortEnums.MovieSortType.Now_playing;
+                        setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                    } else {
+                        isMovie = true;
+                        setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                        favoriteMoviesAdapter = new FavoriteMoviesAdapter(getBaseContext(), getAllFavoriteMovies());
+                        recyclerView.setAdapter(favoriteMoviesAdapter);
+                    }
 
                     //changing the sort options
                     MenuItem item = currentMenu.findItem(R.id.now_playing_option);
-                    item.setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                    item.setTitle(MovieSortEnums.sortTitlesMovies.get(MovieSortEnums.MovieSortType.Now_playing));
                     item = currentMenu.findItem(R.id.upcoming_option);
                     item.setTitle(MovieSortEnums.sortTitlesMovies.get(MovieSortEnums.MovieSortType.Upcoming));
                 }
@@ -216,8 +230,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.favorite_option:
                 sortType = MovieSortEnums.MovieSortType.Favorites;
-                setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
-                favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteMovies());
+                if (isMovie) {
+                    setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                    favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteMovies());
+                } else {
+                    setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                    favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteTVs());
+                }
                 recyclerView.setAdapter(favoriteMoviesAdapter);
                 return true;
         }
@@ -256,7 +275,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Cursor getAllFavoriteMovies() {
-        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, MovieContract.MovieEntry.COLUMN_TIMESTAMP + " DESC");
+        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, "isMovie = '1'", null, MovieContract.MovieEntry.COLUMN_TIMESTAMP + " DESC");
+    }
+
+    private Cursor getAllFavoriteTVs() {
+        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, "isMovie = '0'", null, MovieContract.MovieEntry.COLUMN_TIMESTAMP + " DESC");
     }
 
     /**

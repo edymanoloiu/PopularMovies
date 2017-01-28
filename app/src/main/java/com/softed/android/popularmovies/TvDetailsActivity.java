@@ -1,18 +1,26 @@
 package com.softed.android.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.softed.android.popularmovies.Adapters.SeasonsListAdapter;
+import com.softed.android.popularmovies.Data.MovieContract;
+import com.softed.android.popularmovies.Utilities.Movie;
 import com.softed.android.popularmovies.Utilities.NetworkUtils;
 import com.softed.android.popularmovies.Utilities.Season;
 
@@ -31,6 +39,7 @@ public class TvDetailsActivity extends AppCompatActivity {
     ImageView moviePosterTextView;
     ListView seasonsListView;
     Context mContext;
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,5 +118,101 @@ public class TvDetailsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details_view_menu, menu);
+
+        this.menu = menu;
+        MenuItem settingsItem = menu.findItem(R.id.action_favorite);
+
+        if (checkIfMoviesIsFavorite(TVID) < 0)
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.favorite_image));
+        else
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.full_favorite_icon));
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String posterURL = getIntent().getStringExtra("posterPath");
+        String movieID = getIntent().getStringExtra("ID");
+        String userRatings = getIntent().getStringExtra("userRating");
+        String title = getIntent().getStringExtra("title");
+        String releaseDate = getIntent().getStringExtra("releaseDate");
+        String plot = getIntent().getStringExtra("plot");
+
+        Cursor cursor = getAllFavoriteTVs();
+        int cursorPosition = checkIfMoviesIsFavorite(movieID);
+
+        if (cursorPosition < 0) {
+            Movie movie = new Movie();
+            movie.setName(title);
+            movie.setID(movieID);
+            movie.setPosterURL(posterURL);
+            movie.setUserRating(userRatings);
+            movie.setReleaseDate(releaseDate);
+            movie.setPlot(plot);
+
+            //add movie to the DB
+            addNewMovie(movie);
+
+            Toast.makeText(getBaseContext(), "Added " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+            MenuItem settingsItem = menu.findItem(R.id.action_favorite);
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.full_favorite_icon));
+        } else {
+            cursor.moveToPosition(cursorPosition);
+            removeMovie(cursor.getLong(cursor.getColumnIndex(MovieContract.MovieEntry._ID)));
+            Toast.makeText(getBaseContext(), "Removed " + title + " to favorites list", Toast.LENGTH_SHORT).show();
+            MenuItem settingsItem = menu.findItem(R.id.action_favorite);
+            settingsItem.setIcon(getResources().getDrawable(R.drawable.favorite_image));
+        }
+
+        return true;
+    }
+
+
+    private void addNewMovie(Movie movie) {
+        ContentValues cv = new ContentValues();
+        cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_TITLE, movie.getName());
+        cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getID());
+        cv.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, movie.getPosterURL());
+        cv.put(MovieContract.MovieEntry.COLUMN_USER_RATING, movie.getUserRating());
+        cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        cv.put(MovieContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
+        cv.put(MovieContract.MovieEntry.COLUMN_IS_MOVIE, "0");
+        getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
+    }
+
+    private Cursor getAllFavoriteTVs() {
+        return getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, "isMovie = 0", null, MovieContract.MovieEntry.COLUMN_TIMESTAMP + " DESC");
+    }
+
+    private void removeMovie(long id) {
+        Uri uri = MovieContract.MovieEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(id + "").build();
+        getContentResolver().delete(uri, null, null);
+    }
+
+    private int checkIfMoviesIsFavorite(String movieID) {
+        Cursor cursor = getAllFavoriteTVs();
+        boolean isFavorite = false;
+        int cursorPosition = -1;
+        if (cursor != null) {
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                if (cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)).equals(movieID)) {
+                    isFavorite = true;
+                    cursorPosition = i;
+                    break;
+                }
+            }
+        }
+        if (isFavorite)
+            return cursorPosition;
+        else
+            return -1;
     }
 }

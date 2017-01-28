@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.softed.android.popularmovies.Data.MovieContract;
 import com.softed.android.popularmovies.MovieDetailsActivity;
 import com.softed.android.popularmovies.R;
+import com.softed.android.popularmovies.TvDetailsActivity;
 
 /**
  * Created by Edi on 22.01.2017.
@@ -47,6 +48,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
         final String plot = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_PLOT));
         final String releaseDate = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
         final String movieID = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
+        final String isMovie = mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_IS_MOVIE));
 
         holder.title.setText(movieTitle);
         holder.rating.setText(movieRating);
@@ -55,7 +57,13 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, MovieDetailsActivity.class);
+                Intent intent;
+                if (isMovie.equals("1"))
+                    intent = new Intent(mContext, MovieDetailsActivity.class);
+                else
+                    intent = new Intent(mContext, TvDetailsActivity.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("title", movieTitle);
                 intent.putExtra("posterPath", posterPath);
                 intent.putExtra("plot", plot);
@@ -63,6 +71,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
                 intent.putExtra("userRating", movieRating);
                 intent.putExtra("ID", movieID);
                 mContext.startActivity(intent);
+
             }
         });
     }
