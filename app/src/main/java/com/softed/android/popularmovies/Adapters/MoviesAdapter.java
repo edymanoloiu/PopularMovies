@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.softed.android.popularmovies.MovieDetailsActivity;
 import com.softed.android.popularmovies.R;
+import com.softed.android.popularmovies.TvDetailsActivity;
 import com.softed.android.popularmovies.Utilities.Movie;
 
 import java.util.List;
@@ -50,14 +51,25 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, MovieDetailsActivity.class);
-                intent.putExtra("title", moviesList.get(position).getName());
-                intent.putExtra("posterPath", moviesList.get(position).getPosterURL());
-                intent.putExtra("plot", moviesList.get(position).getPlot());
-                intent.putExtra("releaseDate", moviesList.get(position).getReleaseDate());
-                intent.putExtra("userRating", moviesList.get(position).getUserRating());
-                intent.putExtra("ID", moviesList.get(position).getID());
-                mContext.startActivity(intent);
+                if(moviesList.get(position).getIsMovie()) {
+                    Intent intent = new Intent(mContext, MovieDetailsActivity.class);
+                    intent.putExtra("title", moviesList.get(position).getName());
+                    intent.putExtra("posterPath", moviesList.get(position).getPosterURL());
+                    intent.putExtra("plot", moviesList.get(position).getPlot());
+                    intent.putExtra("releaseDate", moviesList.get(position).getReleaseDate());
+                    intent.putExtra("userRating", moviesList.get(position).getUserRating());
+                    intent.putExtra("ID", moviesList.get(position).getID());
+                    mContext.startActivity(intent);
+                }else{
+                    Intent intent = new Intent(mContext, TvDetailsActivity.class);
+                    intent.putExtra("title", moviesList.get(position).getName());
+                    intent.putExtra("posterPath", moviesList.get(position).getPosterURL());
+                    intent.putExtra("plot", moviesList.get(position).getPlot());
+                    intent.putExtra("releaseDate", moviesList.get(position).getReleaseDate());
+                    intent.putExtra("userRating", moviesList.get(position).getUserRating());
+                    intent.putExtra("ID", moviesList.get(position).getID());
+                    mContext.startActivity(intent);
+                }
             }
         });
     }

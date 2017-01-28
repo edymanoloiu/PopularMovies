@@ -82,7 +82,7 @@ public class NetworkUtils {
         JSONArray jsonArray = object.getJSONArray("results");
 
         List<Movie> movies = new LinkedList<>();
-        Movie movie = null;
+        Movie movie;
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonobject = jsonArray.getJSONObject(i);
             movie = new Movie();
@@ -92,6 +92,7 @@ public class NetworkUtils {
             movie.setUserRating(jsonobject.getString("vote_average"));
             movie.setReleaseDate(jsonobject.getString("release_date"));
             movie.setID(jsonobject.getString("id"));
+            movie.setIsMovie(true);
             movies.add(movie);
         }
 
@@ -104,7 +105,7 @@ public class NetworkUtils {
         JSONArray jsonArray = object.getJSONArray("results");
 
         List<Movie> movies = new LinkedList<>();
-        Movie movie = null;
+        Movie movie;
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonobject = jsonArray.getJSONObject(i);
             movie = new Movie();
@@ -114,6 +115,7 @@ public class NetworkUtils {
             movie.setUserRating(jsonobject.getString("vote_average"));
             movie.setReleaseDate(jsonobject.getString("first_air_date"));
             movie.setID(jsonobject.getString("id"));
+            movie.setIsMovie(false);
             movies.add(movie);
         }
 

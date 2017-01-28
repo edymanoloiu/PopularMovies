@@ -11,6 +11,7 @@ public class Movie {
     private String releaseDate;
     private String posterURL;
     private String ID;
+    private boolean isMovie;
 
     public Movie() {
     }
@@ -61,5 +62,13 @@ public class Movie {
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public boolean getIsMovie() {
+        return isMovie;
+    }
+
+    public void setIsMovie(boolean isMovie) {
+        this.isMovie = isMovie;
     }
 }

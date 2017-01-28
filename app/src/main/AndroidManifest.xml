@@ -11,20 +11,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.softed.android.popularmovies.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.softed.android.popularmovies.MovieDetailsActivity" />
-        <activity android:name="com.softed.android.popularmovies.ReviewsActivity"></activity>
+        <activity android:name=".MovieDetailsActivity" />
+        <activity android:name=".ReviewsActivity" />
 
         <provider
-            android:name="com.softed.android.popularmovies.Data.MovieContentProvider"
+            android:name=".Data.MovieContentProvider"
             android:authorities="com.softed.android.popularmovies"
             android:exported="false" />
+
+        <activity android:name=".TvDetailsActivity"></activity>
     </application>
 
 </manifest>
