@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -146,7 +148,7 @@ public class NetworkUtils {
         JSONObject object = new JSONObject(jsonResponse);
         JSONArray jsonArray = object.getJSONArray("results");
         List<Review> reviews = new LinkedList<>();
-        Review review = null;
+        Review review;
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonobject = jsonArray.getJSONObject(i);
             review = new Review();
@@ -157,6 +159,34 @@ public class NetworkUtils {
             reviews.add(review);
         }
         return reviews;
+    }
+
+    public static List<Season> getSeasonList(URL url) throws ExecutionException, InterruptedException, JSONException {
+        List<Season> seasons = new LinkedList<>();
+
+        String jsonResponse = new TMDBQueryTask().execute(url).get();
+        JSONObject object = new JSONObject(jsonResponse);
+        JSONArray jsonArray = object.getJSONArray("seasons");
+
+        Season season;
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            season = new Season();
+            season.setID(jsonObject.getString("id"));
+            season.setNumber(jsonObject.getInt("season_number"));
+            season.setEpisodesCount(jsonObject.getInt("episode_count"));
+            season.setAirDate(jsonObject.getString("air_date"));
+            seasons.add(season);
+        }
+
+        Collections.sort(seasons, new Comparator<Season>() {
+            public int compare(Season emp1, Season emp2) {
+                return emp1.getNumber() - (emp2.getNumber());
+            }
+        });
+
+        return seasons;
     }
 
     private static class TMDBQueryTask extends AsyncTask<URL, Void, String> {

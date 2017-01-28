@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -86,6 +87,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
         for (Trailer t : trailerList)
             trailerNames.add(t.getName());
         listView.setAdapter(new TrailerListAdapter(this, trailerNames.toArray(new String[trailerList.size()])));
+
+        //set season scroll event event
+        listView.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
 
         //create on click listener for list view
         final List<Trailer> finalTrailerList = trailerList;
