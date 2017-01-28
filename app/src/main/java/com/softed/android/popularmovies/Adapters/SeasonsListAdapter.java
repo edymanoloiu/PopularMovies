@@ -52,8 +52,10 @@ public class SeasonsListAdapter extends BaseAdapter {
         textView.setText("Season #" + data.get(i).getNumber());
         textView = (TextView) view.findViewById(R.id.no_episodes_row_item);
         textView.setText("Episodes count: " + data.get(i).getEpisodesCount());
-        textView = (TextView) view.findViewById(R.id.air_date_row_item);
-        textView.setText("Air date: " + data.get(i).getAirDate());
+        if (data.get(i).getAirDate() != null && !data.get(i).getAirDate().isEmpty() && !data.get(i).getAirDate().equals("null")) {
+            textView = (TextView) view.findViewById(R.id.air_date_row_item);
+            textView.setText("Air date: " + data.get(i).getAirDate());
+        }
         return view;
     }
 }

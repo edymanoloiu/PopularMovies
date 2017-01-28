@@ -61,7 +61,8 @@ public class SeasonDetailsActivity extends AppCompatActivity {
 
         setTitle(season.getName());
         Glide.with(getBaseContext()).load(season.getPosterPath()).into(seasonPosterImageView);
-        seasonReleaseDateTextView.setText(season.getAirDate());
+        if (!season.getAirDate().equals("null"))
+            seasonReleaseDateTextView.setText(season.getAirDate());
         seasonOverviewTextView.setText(season.getOverview());
 
         //populate trailer view
@@ -87,10 +88,16 @@ public class SeasonDetailsActivity extends AppCompatActivity {
         });
 
         //set on item click listener
+        final Season finalSeason = season;
         episodesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(mContext, EpisodeDetailsActivity.class);
+                intent.putExtra("name", finalSeason.getEpisodeList().get(i).getName());
+                intent.putExtra("poster", finalSeason.getEpisodeList().get(i).getPosterPath());
+                intent.putExtra("overview", finalSeason.getEpisodeList().get(i).getOverview());
+                intent.putExtra("rating", finalSeason.getEpisodeList().get(i).getRating());
+                intent.putExtra("release", finalSeason.getEpisodeList().get(i).getAir_date());
                 startActivity(intent);
             }
         });
