@@ -21,37 +21,15 @@
 
             <ImageView
                 android:id="@+id/movie_details_poster"
-                android:layout_width="match_parent"
+                android:layout_width="150dp"
                 android:layout_height="250dp" />
 
             <TextView
                 android:id="@+id/movie_details_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/movie_details_release_date"
-                android:paddingTop="16dp"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/movie_details_user_ratings"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/movie_details_title"
-                android:layout_toLeftOf="@+id/show_reviews_button"
-                android:paddingTop="16dp"
-                android:padding="16dp"
-                android:textColor="@color/user_ratings"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/movie_details_release_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@+id/movie_details_poster"
                 android:paddingTop="16dp"
-                android:padding="16dp"
                 android:textSize="20sp" />
 
             <ListView
@@ -61,17 +39,45 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/show_reviews_button"></ListView>
+                android:layout_below="@+id/movie_details_title"></ListView>
 
             <Button
                 android:id="@+id/show_reviews_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/movie_details_user_ratings"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/movie_details_title"
-                android:text="@string/reviews_button_string" />
+                android:layout_below="@+id/movie_details_user_ratings"
+                android:layout_toEndOf="@+id/movie_details_poster"
+                android:text="@string/reviews_button_string"
+                android:layout_alignLeft="@+id/movie_details_user_ratings"
+                android:layout_alignStart="@+id/movie_details_user_ratings" />
+
+            <TextView
+                android:id="@+id/movie_details_user_ratings"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/movie_details_release_date"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/movie_details_poster"
+                android:layout_toRightOf="@+id/movie_details_poster"
+                android:textColor="@color/user_ratings"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/movie_details_release_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="82dp"
+                android:textSize="20sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignLeft="@+id/movie_details_user_ratings"
+                android:layout_alignStart="@+id/movie_details_user_ratings" />
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

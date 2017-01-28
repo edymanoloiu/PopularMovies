@@ -60,6 +60,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         final String movieID = getIntent().getStringExtra("ID");
         MOVIEID = movieID;
 
+        //populate the UI
         setTitle(title);
         movieTitleTextView.setText(plot);
         releaseDateTextView.setText(releaseDate);
