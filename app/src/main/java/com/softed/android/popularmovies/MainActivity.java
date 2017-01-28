@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.sort_options, menu);
+        final Menu currentMenu = menu;
 
         MenuItem item = menu.findItem(R.id.movies_switch);
         final Switch switchButton = (Switch) item.getActionView().findViewById(R.id.what_to_display_switch);
@@ -138,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
                     isMovie = false;
                     sortType = MovieSortEnums.MovieSortType.Now_playing;
                     setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
+
+                    //changing the sort options
+                    MenuItem item = currentMenu.findItem(R.id.now_playing_option);
+                    item.setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
+                    item = currentMenu.findItem(R.id.upcoming_option);
+                    item.setTitle(MovieSortEnums.sortTitlesTv.get(MovieSortEnums.MovieSortType.Upcoming));
                 } else {
                     switchButton.setText("Movies");
                     isMovie = true;
@@ -146,6 +153,12 @@ public class MainActivity extends AppCompatActivity {
                     loadMovies(query);
                     sortType = MovieSortEnums.MovieSortType.Now_playing;
                     setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+
+                    //changing the sort options
+                    MenuItem item = currentMenu.findItem(R.id.now_playing_option);
+                    item.setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                    item = currentMenu.findItem(R.id.upcoming_option);
+                    item.setTitle(MovieSortEnums.sortTitlesMovies.get(MovieSortEnums.MovieSortType.Upcoming));
                 }
             }
         });
