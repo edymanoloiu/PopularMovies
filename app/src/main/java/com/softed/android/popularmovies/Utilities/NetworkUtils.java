@@ -29,6 +29,10 @@ public class NetworkUtils {
 
     public final static String TMDB_MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/";
 
+    public final static String TMDB_MOVIE_SEARCH_BASE_URL = "https://api.themoviedb.org/3/search/movie?";
+
+    public final static String TMDB_TV_SEARCH_BASE_URL = "https://api.themoviedb.org/3/search/tv?";
+
     public final static String TMDB_TV_BASE_URL = "https://api.themoviedb.org/3/tv/";
 
     public final static String POPULAR_SORT = "popular?";

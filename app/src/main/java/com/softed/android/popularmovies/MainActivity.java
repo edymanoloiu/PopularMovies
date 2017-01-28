@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.SearchView;
 import android.widget.Switch;
 
 import com.softed.android.popularmovies.Adapters.FavoriteMoviesAdapter;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private MovieSortEnums.MovieSortType sortType = MovieSortEnums.MovieSortType.Now_playing;
     private int page = 1;
     private boolean isMovie = true;
+    private SearchView searchView;
+    private boolean isSearch = false;
+    private String searchQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        searchView = (SearchView) findViewById(R.id.search_view);
 
         moviesList = new ArrayList<>();
         adapter = new MoviesAdapter(this, moviesList);
@@ -74,14 +79,18 @@ public class MainActivity extends AppCompatActivity {
                     String query = null;
 
                     if (isMovie) {
-                        if (sortType == MovieSortEnums.MovieSortType.User_Rating)
-                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                        else if (sortType == MovieSortEnums.MovieSortType.Most_Popular)
-                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                        else if (sortType == MovieSortEnums.MovieSortType.Now_playing)
-                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
-                        else if (sortType == MovieSortEnums.MovieSortType.Upcoming)
-                            query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        if (!isSearch) {
+                            if (sortType == MovieSortEnums.MovieSortType.User_Rating)
+                                query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                            else if (sortType == MovieSortEnums.MovieSortType.Most_Popular)
+                                query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.POPULAR_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                            else if (sortType == MovieSortEnums.MovieSortType.Now_playing)
+                                query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                            else if (sortType == MovieSortEnums.MovieSortType.Upcoming)
+                                query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.UPCOMING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
+                        } else {
+                            query = NetworkUtils.TMDB_MOVIE_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + searchQuery + "&page=" + page + "&include_adult=false";
+                        }
                     } else {
                         if (sortType == MovieSortEnums.MovieSortType.User_Rating)
                             query = NetworkUtils.TMDB_TV_BASE_URL + NetworkUtils.RATED_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
@@ -94,6 +103,36 @@ public class MainActivity extends AppCompatActivity {
                     }
                     loadMovies(query);
                 }
+            }
+        });
+
+        //add search view listener
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty())
+                    isSearch = false;
+                return false;
+            }
+
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.length() != 0) {
+                    String dbQuery;
+                    if (isMovie)
+                        dbQuery = NetworkUtils.TMDB_MOVIE_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + query + "&page=1&include_adult=false";
+                    else
+                        dbQuery = NetworkUtils.TMDB_TV_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + query + "&page=1";
+                    moviesList.clear();
+                    loadMovies(dbQuery);
+                    page = 1;
+                    isSearch = true;
+                    searchQuery = query;
+                    return true;
+                }
+                return false;
             }
         });
     }
