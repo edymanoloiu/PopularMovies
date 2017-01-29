@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         dbQuery = NetworkUtils.TMDB_TV_SEARCH_BASE_URL + NetworkUtils.API_KEY + "&language=en-US&query=" + query.replace(" ", "%20") + "&page=1";
                     moviesList.clear();
                     loadMovies(dbQuery);
+                    recyclerView.setAdapter(adapter);
                     page = 1;
                     isSearch = true;
                     searchQuery = query;
@@ -199,16 +200,15 @@ public class MainActivity extends AppCompatActivity {
                     item = currentMenu.findItem(R.id.upcoming_option);
                     item.setTitle(MovieSortEnums.sortTitlesTv.get(MovieSortEnums.MovieSortType.Upcoming));
                 } else {
+                    switchButton.setText("Movies");
+                    isMovie = true;
                     if (sortType != MovieSortEnums.MovieSortType.Favorites) {
-                        switchButton.setText("Movies");
-                        isMovie = true;
                         String query = NetworkUtils.TMDB_MOVIE_BASE_URL + NetworkUtils.NOW_PLAYING_SORT + NetworkUtils.API_KEY + NetworkUtils.QUERY_END + page;
                         moviesList.clear();
                         loadMovies(query);
                         sortType = MovieSortEnums.MovieSortType.Now_playing;
                         setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
                     } else {
-                        isMovie = true;
                         setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
                         favoriteMoviesAdapter = new FavoriteMoviesAdapter(getBaseContext(), getAllFavoriteMovies());
                         recyclerView.setAdapter(favoriteMoviesAdapter);
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
                     favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteMovies());
                 } else {
-                    setTitle(MovieSortEnums.sortTitlesMovies.get(sortType));
+                    setTitle(MovieSortEnums.sortTitlesTv.get(sortType));
                     favoriteMoviesAdapter = new FavoriteMoviesAdapter(this, getAllFavoriteTVs());
                 }
                 recyclerView.setAdapter(favoriteMoviesAdapter);
