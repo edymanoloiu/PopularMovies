@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "119509597793",
+    "firebase_url": "https://popularmovies-b26a9.firebaseio.com",
+    "project_id": "popularmovies-b26a9",
+    "storage_bucket": "popularmovies-b26a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119509597793:android:09b18bd1ca481247",
+        "android_client_info": {
+          "package_name": "com.softed.android.popularmovies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119509597793-8cr6ji8mkjdrrin9pgus0n7re7o13vm2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softed.android.popularmovies",
+            "certificate_hash": "52F44538C283505169435D933EF018016AFF5227"
+          }
+        },
+        {
+          "client_id": "119509597793-ll17cbm1boak8t718deqa0bid5f2vfae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHemkVeco60O6mqzivvl6yomSLhcNrndQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "119509597793-ll17cbm1boak8t718deqa0bid5f2vfae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
