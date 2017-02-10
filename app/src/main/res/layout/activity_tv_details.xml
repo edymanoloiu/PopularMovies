@@ -37,16 +37,14 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/tv_user_ratings"
+                android:id="@+id/last_episode_air_time_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_release_date"
-                android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_toEndOf="@+id/tv_details_poster"
-                android:layout_toRightOf="@+id/tv_details_poster"
-                android:textColor="@color/user_ratings"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:layout_alignLeft="@+id/tv_release_date"
+                android:layout_alignStart="@+id/tv_release_date" />
 
             <TextView
                 android:id="@+id/tv_details_title"
@@ -77,6 +75,19 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/tv_overview"
                 android:layout_marginTop="20dp"></ListView>
+
+            <TextView
+                android:id="@+id/tv_user_ratings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/last_episode_air_time_text_view"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/user_ratings"
+                android:textSize="20sp"
+                android:layout_alignLeft="@+id/last_episode_air_time_text_view"
+                android:layout_alignStart="@+id/last_episode_air_time_text_view" />
         </RelativeLayout>
     </ScrollView>
 

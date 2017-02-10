@@ -176,7 +176,9 @@ public class NetworkUtils {
         JSONObject object = new JSONObject(jsonResponse);
         JSONArray jsonArray = object.getJSONArray("seasons");
 
-        Season season;
+        Season season = new Season();
+        season.setAirDate(object.getString(("last_air_date")));
+        seasons.add(season);
 
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);

@@ -52,7 +52,7 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
 
         holder.title.setText(movieTitle);
         holder.rating.setText(movieRating);
-        Glide.with(mContext).load(posterPath).into(holder.thumbnail);
+        Glide.with(mContext).load(posterPath).error(R.mipmap.image_not_found).into(holder.thumbnail);
 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override

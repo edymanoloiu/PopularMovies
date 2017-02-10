@@ -36,6 +36,6 @@ public class EpisodeDetailsActivity extends AppCompatActivity {
         episodeRatingTextView.setText(rating);
         if (!releaseDate.equals("Air date: null"))
             episodeReleaseDateTextView.setText(releaseDate);
-        Glide.with(getBaseContext()).load(posterPath).into(episodePosterImageView);
+        Glide.with(getBaseContext()).load(posterPath).error(R.mipmap.image_not_found).into(episodePosterImageView);
     }
 }

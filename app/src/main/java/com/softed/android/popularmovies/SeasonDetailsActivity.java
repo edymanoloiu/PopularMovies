@@ -60,7 +60,7 @@ public class SeasonDetailsActivity extends AppCompatActivity {
         }
 
         setTitle(season.getName());
-        Glide.with(getBaseContext()).load(season.getPosterPath()).into(seasonPosterImageView);
+        Glide.with(getBaseContext()).load(season.getPosterPath()).error(R.mipmap.image_not_found).into(seasonPosterImageView);
         if (!season.getAirDate().equals("null"))
             seasonReleaseDateTextView.setText(season.getAirDate());
         seasonOverviewTextView.setText(season.getOverview());

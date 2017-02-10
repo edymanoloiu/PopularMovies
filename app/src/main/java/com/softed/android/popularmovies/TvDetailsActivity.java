@@ -31,15 +31,15 @@ import java.util.concurrent.ExecutionException;
 
 public class TvDetailsActivity extends AppCompatActivity {
 
-    static String TVID;
-    TextView tvTitleTextView;
-    TextView tvReleaseDateTextView;
-    TextView tvUserRatingDateTextView;
-    TextView tvOverviewTextView;
-    ImageView moviePosterTextView;
-    ListView seasonsListView;
-    Context mContext;
-    Menu menu;
+    private static String TVID;
+    private TextView tvTitleTextView;
+    private TextView tvReleaseDateTextView;
+    private TextView tvUserRatingDateTextView;
+    private TextView tvOverviewTextView;
+    private ImageView moviePosterTextView;
+    private ListView seasonsListView;
+    private Context mContext;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class TvDetailsActivity extends AppCompatActivity {
 
         //populate the UI
         setTitle(title);
-        Glide.with(getBaseContext()).load(posterURL).into(moviePosterTextView);
+        Glide.with(getBaseContext()).load(posterURL).error(R.mipmap.image_not_found).into(moviePosterTextView);
         tvTitleTextView.setText(title);
         tvReleaseDateTextView.setText(releaseDate);
         tvUserRatingDateTextView.setText(userRatings);
@@ -77,6 +77,9 @@ public class TvDetailsActivity extends AppCompatActivity {
         List<Season> seasons = null;
         try {
             seasons = NetworkUtils.getSeasonList(NetworkUtils.buildUrl(query));
+            TextView endDate = (TextView) findViewById(R.id.last_episode_air_time_text_view);
+            endDate.setText("Last aired: " + seasons.get(0).getAirDate());
+            seasons.remove(0);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

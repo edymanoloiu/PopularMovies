@@ -46,7 +46,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         holder.rating.setText(movie.getUserRating());
 
         // loading album cover using Glide library
-        Glide.with(mContext).load(moviesList.get(position).getPosterURL()).into(holder.thumbnail);
+        Glide.with(mContext).load(moviesList.get(position).getPosterURL()).error(R.mipmap.image_not_found).into(holder.thumbnail);
 
         holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
