@@ -66,7 +66,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         movieTitleTextView.setText(plot);
         releaseDateTextView.setText(releaseDate);
         userRatingDateTextView.setText(userRatings);
-        Glide.with(getBaseContext()).load(posterURL).into(moviePosterTextView);
+        Glide.with(getBaseContext()).load(posterURL).error(R.mipmap.image_not_found).into(moviePosterTextView);
 
         //get trailer list for current movie
         String query = NetworkUtils.TMDB_MOVIE_BASE_URL + movieID + "/videos?" + NetworkUtils.API_KEY + "&language=en-US";
@@ -88,7 +88,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             trailerNames.add(t.getName());
         listView.setAdapter(new TrailerListAdapter(this, trailerNames.toArray(new String[trailerList.size()])));
 
-        //set season scroll event event
+        //set trailer scroll event event
         listView.setOnTouchListener(new ListView.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
